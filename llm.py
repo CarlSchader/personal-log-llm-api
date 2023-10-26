@@ -13,14 +13,15 @@ model_path = 'openlm-research/open_llama_3b_v2'
 # model_path = 'openlm-research/open_llama_13b'
 
 tokenizer = LlamaTokenizer.from_pretrained(model_path)
+
 model = LlamaForCausalLM.from_pretrained(
     model_path, torch_dtype=torch.float16, device_map='auto',
 ).to(DEVICE)
 
-prompt = 'Q: What is the largest animal?\nA:'
-input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(DEVICE)
-
-generation_output = model.generate(
-    input_ids=input_ids, max_new_tokens=32
-)
-print(tokenizer.decode(generation_output[0]))
+def run(prompt, max_new_tokens=32):
+    input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(DEVICE)
+    generation_output = model.generate(
+        input_ids=input_ids, max_new_tokens=max_new_tokens
+    )
+    
+    return tokenizer.decode(generation_output[0])

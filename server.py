@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from llm import run
-import logging
+import logging, uvicorn, os
 
 app = FastAPI()
 
@@ -12,4 +12,6 @@ async def health_check():
 async def query(q: str = ''):
     return run(q)
 
-logging
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=os.getenv('PORT', 8080))
+    logging.info('Server started')
